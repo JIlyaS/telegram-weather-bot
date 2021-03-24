@@ -5,5 +5,5 @@ SETTINGS_STATE = 'settings_state'
 CITY_QUESTION = 'Какой город ещё интересует?'
 ERROR_MESSAGE = 'Я тебя не понял!'
 START_KEYBOARD_LIST = ['Погода', 'Настройки']
-RETURN_KEYBOARD_LIST = ['Вернутсья на главную']
+RETURN_KEYBOARD = 'На главную'
 MONTHS = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']

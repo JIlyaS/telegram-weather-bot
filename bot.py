@@ -8,11 +8,7 @@ import consts
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, one_time_keyboard=True)
-
-    markup.row(*consts.START_KEYBOARD_LIST)
-
-    bot.send_message(message.chat.id, 'Привет. Это бот-погода. Поможет узнать погоду в любом городе.', reply_markup=markup)
+    functions.get_main_keyboard(message.chat.id, 'Привет. Это бот-погода. Поможет узнать погоду в любом городе.')
 
 
 @bot.message_handler(commands=['help'])
@@ -34,6 +30,7 @@ def main_handler(message):
         functions.get_inline_key_city(message.chat.id, 'Какой город вас интересует?')
         change_data('states', user_id, consts.CITY_STATE)
     elif message.text == 'Настройки':
+        functions.get_keyboard_return(message.chat.id, 'Теперь вы можете добавить город в избранное!')
         bot.send_message(message.chat.id, 'Добавьте избранный город для быстрого выбора. Напишите полное название города.')
         change_data('states', user_id, consts.SETTINGS_STATE)
     else:
@@ -43,12 +40,10 @@ def main_handler(message):
 @bot.message_handler(func=lambda message: data['states'].get(str(message.from_user.id), consts.MAIN_STATE) == consts.CITY_STATE)
 def city_handler(message):
     user_id = str(message.from_user.id)
-    # if message.text == 'Настройки':
-    #     bot.send_message(message.chat.id, 'Добавьте избранный город для быстрого выбора. Напишите полное название города.')
-    #     change_data('states', user_id, consts.SETTINGS_STATE)
-    # elif message.text == 'Погода':
-    #     change_data('states', user_id, consts.CITY_STATE)
-    if len(message.text.split(' ')) == 1:
+    if message.text == 'На главную':
+        functions.get_main_keyboard(message.chat.id, 'Выберите пункт меню.')
+        change_data('states', user_id, consts.MAIN_STATE)
+    elif len(message.text.split(' ')) == 1:
         resp = functions.get_request_data(message, message.text)
         data['city_weather']['city'] = resp
         data['city_weather']['city_name'] = message.text
@@ -81,7 +76,10 @@ def city_handler(message):
 @bot.message_handler(func=lambda message: data['states'].get(str(message.from_user.id), consts.MAIN_STATE) == consts.SETTINGS_STATE)
 def settings_handler(message):
     user_id = str(message.from_user.id)
-    if functions.get_request_data(message, message.text):
+    if message.text == 'На главную':
+        functions.get_main_keyboard(message.chat.id, 'Выберите пункт меню.')
+        change_data('states', user_id, consts.MAIN_STATE)
+    elif functions.get_request_data(message, message.text):
         if message.text not in data['cities']:
             index = str(len(data['cities']))
             data['cities'].append({index: message.text})
@@ -98,7 +96,10 @@ def settings_handler(message):
 @bot.message_handler(func=lambda message: data['states'].get(str(message.from_user.id), consts.MAIN_STATE) == consts.WEATHER_DATE_STATE)
 def weather_date_handler(message):
     user_id = str(message.from_user.id)
-    if message.text.lower() == 'сегодня':
+    if message.text == 'На главную':
+        bot.send_message(message.chat.id, 'Выберите пункт меню.')
+        change_data('states', user_id, consts.MAIN_STATE)
+    elif message.text.lower() == 'сегодня':
         functions.get_fix_date_weather(message, data['city_weather']['city'], message.text.lower())
         functions.get_inline_key_city(message.chat.id, consts.CITY_QUESTION)
         change_data('states', user_id, consts.CITY_STATE)

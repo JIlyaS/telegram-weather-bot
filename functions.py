@@ -72,7 +72,14 @@ def get_inline_key_city(chat_id, message):
 
     bot.send_message(chat_id, message, reply_markup=markup)
 
+
 def get_keyboard_return(chat_id, message):
-    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    markup.row(*consts.RETURN_KEYBOARD_LIST)
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+    markup.row(consts.RETURN_KEYBOARD)
+    bot.send_message(chat_id, message, reply_markup=markup)
+
+
+def get_main_keyboard(chat_id, message):
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2, one_time_keyboard=True)
+    markup.row(*consts.START_KEYBOARD_LIST)
     bot.send_message(chat_id, message, reply_markup=markup)
