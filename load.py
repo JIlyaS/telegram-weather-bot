@@ -25,7 +25,7 @@ if redis_url is None:
     except FileNotFoundError:
         data = init_data
 else:
-    redis_db = redis.from_url(REDIS_URL)
+    redis_db = redis.from_url(redis_url)
     raw_data = redis_db.get('data')
     if raw_data is None:
         data = init_data
@@ -38,6 +38,6 @@ def change_data(key, user_id, value):
     if redis_url is None:
         json.dump(data, open('db/data.json', 'w', encoding='utf-8'), indent=2, ensure_ascii=False)
     else:
-        redis_db = redis.from_url(REDIS_URL)
+        redis_db = redis.from_url(redis_url)
         redis_db.set('data', json.dumps(data))
         
