@@ -1,7 +1,7 @@
 {
   "weather_api": "https://api.weatherbit.io/v2.0",
   "states": {
-    "382946221": "main_state",
+    "382946221": "city_state",
     "1673485604": "main_state"
   },
   "cities": [
